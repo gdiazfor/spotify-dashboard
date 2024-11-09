@@ -9,6 +9,7 @@ import { MusicIcon, Disc3Icon, UsersIcon, TrendingUpIcon } from "lucide-react"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { useState, useEffect } from "react"
 import { useSpotify } from "@/hooks/use-spotify"
+import Image from "next/image"
 
 interface Artist {
   id: string
@@ -162,11 +163,15 @@ export function ArtistDetailsModal({ artist, isOpen, onClose }: ArtistDetailsMod
                     {topTracks.map((track, index) => (
                       <div key={track.id} className="flex items-center space-x-4">
                         <span className="text-muted-foreground w-4">{index + 1}.</span>
-                        <img 
-                          src={track.album.images[2]?.url} 
-                          alt={track.album.name}
-                          className="h-10 w-10 rounded"
-                        />
+                        <div className="relative h-10 w-10">
+                          <Image 
+                            src={track.album.images[2]?.url} 
+                            alt={track.album.name}
+                            fill
+                            className="object-cover rounded"
+                            sizes="40px"
+                          />
+                        </div>
                         <div className="flex-1 min-w-0">
                           <p className="font-medium truncate">{track.name}</p>
                           <p className="text-sm text-muted-foreground truncate">
