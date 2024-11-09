@@ -4,7 +4,7 @@ import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { cn } from "@/lib/utils"
 import { LayoutDashboard, Settings, History, Mic2 } from "lucide-react"
-import { NowPlaying } from "../now-playing"
+
 
 const navigation = [
   { name: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
@@ -18,7 +18,7 @@ export function MainNav() {
 
   return (
 
-    <nav className="flex items-center justify-between w-full hidden">
+    <nav className="items-center justify-between w-full hidden">
       <div className="flex items-center space-x-6">
         {navigation.map((item) => {
           const Icon = item.icon

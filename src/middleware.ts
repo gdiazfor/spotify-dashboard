@@ -11,7 +11,7 @@ export default function middleware(request: NextRequest) {
         if (auth?.state?.spotify?.accessToken) {
           return NextResponse.redirect(new URL('/dashboard', request.url))
         }
-      } catch (e) {
+      } catch {
         // Invalid JSON in cookie, ignore
       }
     }

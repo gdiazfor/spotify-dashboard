@@ -30,6 +30,12 @@ interface Lyrics {
   lyrics: string
 }
 
+interface SpotifyDevice {
+  id: string
+  is_active: boolean
+  // Add other device properties if needed
+}
+
 export function NowPlaying() {
   const { fetchWithToken, isAuthenticated } = useSpotify()
   const [currentTrack, setCurrentTrack] = useState<CurrentTrack | null>(null)
@@ -48,7 +54,7 @@ export function NowPlaying() {
         }
         setError(false)
         setCurrentTrack(data)
-      } catch (error) {
+      } catch {
         setError(true)
         setCurrentTrack(null)
       }
@@ -85,7 +91,7 @@ export function NowPlaying() {
           return
         }
         const data = await response.json()
-        const activeDevice = data.devices.find((d: any) => d.is_active)
+        const activeDevice = data.devices.find((d: SpotifyDevice) => d.is_active)
         if (activeDevice) {
           setDeviceId(activeDevice.id)
         }

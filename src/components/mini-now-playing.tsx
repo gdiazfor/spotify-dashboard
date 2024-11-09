@@ -41,7 +41,7 @@ export function MiniNowPlaying() {
         }
         setError(false)
         setCurrentTrack(data)
-      } catch (error) {
+      } catch {
         setError(true)
         setCurrentTrack(null)
       }

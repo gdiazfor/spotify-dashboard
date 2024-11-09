@@ -117,7 +117,9 @@ export function ArtistsTab() {
 
   useEffect(() => {
     let mounted = true
-    let timeoutId: NodeJS.Timeout
+    const timeoutId = setTimeout(() => {
+      fetchData()
+    }, 300)
 
     const fetchData = async () => {
       setIsLoading(true)
@@ -126,7 +128,9 @@ export function ArtistsTab() {
         const tracksData = await fetchWithToken(`/me/top/tracks?limit=50&time_range=${timeRange}`)
         
         if (mounted) {
-          const artistAppearances = tracksData.items.reduce((acc: { [key: string]: number }, track: any) => {
+          const artistAppearances = tracksData.items.reduce((acc: { [key: string]: number }, track: {
+            artists: Array<{ id: string }>
+          }) => {
             track.artists.forEach((artist: { id: string }) => {
               acc[artist.id] = (acc[artist.id] || 0) + 1
             })
@@ -149,10 +153,6 @@ export function ArtistsTab() {
         setIsLoading(false)
       }
     }
-
-    timeoutId = setTimeout(() => {
-      fetchData()
-    }, 300)
 
     return () => {
       mounted = false

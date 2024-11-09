@@ -15,6 +15,7 @@ import { ArtistsTab } from "@/components/dashboard/artists-tab"
 import { UserNav } from "@/components/layout/user-nav"
 import { Badge } from "@/components/ui/badge"
 import { MiniNowPlaying } from "@/components/mini-now-playing"
+import Image from 'next/image'
 
 interface TopTrack {
   name: string
@@ -156,10 +157,12 @@ function TopTracksContent({ tracks }: { tracks: TopTrack[] }) {
       {tracks.map((track, i) => (
         <div key={i} className="flex items-center space-x-4 group">
           <div className="flex-shrink-0 h-12 w-12 relative">
-            <img 
+            <Image 
               src={track.album.images[2]?.url || track.album.images[0]?.url} 
               alt={track.album.name}
-              className="h-12 w-12 object-cover rounded shadow-sm"
+              fill
+              className="object-cover rounded shadow-sm"
+              sizes="48px"
             />
             <PlayButton previewUrl={track.preview_url} />
           </div>
@@ -205,10 +208,12 @@ function TopArtistsContent({ artists }: { artists: TopArtist[] }) {
       {artists.map((artist, i) => (
         <div key={i} className="flex items-center space-x-4 group">
           <div className="flex-shrink-0 h-12 w-12">
-            <img 
-              src={artist.images[2]?.url || artist.images[0]?.url} 
+            <Image
+              src={artist.images[1]?.url || artist.images[0]?.url}
               alt={artist.name}
-              className="h-12 w-12 object-cover rounded-full shadow-sm"
+              fill
+              className="object-cover rounded-sm"
+              sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
             />
           </div>
           <div className="min-w-0 flex-1">
@@ -236,10 +241,12 @@ function RecentTracksContent({ tracks }: { tracks: RecentTrack[] }) {
       {tracks.map((item, i) => (
         <div key={i} className="flex items-center space-x-4 group">
           <div className="flex-shrink-0 h-12 w-12 relative">
-            <img 
+            <Image 
               src={item.track.album.images[2]?.url || item.track.album.images[0]?.url} 
               alt={item.track.album.name}
-              className="h-12 w-12 object-cover rounded shadow-sm"
+              fill
+              className="object-cover rounded shadow-sm"
+              sizes="48px"
             />
             <PlayButton previewUrl={item.track.preview_url} />
           </div>
@@ -384,10 +391,12 @@ export default function DashboardPage() {
                         <div key={artist.id} className="flex items-center gap-6 group">
                           <div className="text-4xl font-bold w-8 text-black ml-3">{i + 1}</div>
                           <div className="relative aspect-square w-24 flex-shrink-0">
-                            <img
+                            <Image
                               src={artist.images[1]?.url || artist.images[0]?.url}
                               alt={artist.name}
-                              className="object-cover rounded-sm absolute inset-0 w-full h-full"
+                              fill
+                              className="object-cover rounded-sm"
+                              sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                             />
                           </div>
                           <div className="min-w-0 flex-1">
@@ -420,10 +429,13 @@ export default function DashboardPage() {
                             topArtists[0] && (
                                 <>
                                     <div className="relative aspect-square w-full max-w-[288px] mb-4">
-                                        <img
+                                        <Image
                                             src={topArtists[0].images[0]?.url}
                                             alt={topArtists[0].name}
-                                            className="object-cover rounded-lg absolute inset-0 w-full h-full"
+                                            fill
+                                            className="object-cover rounded-lg"
+                                            sizes="(max-width: 768px) 100vw, 288px"
+                                            priority
                                         />
                                     </div>
                                     <h3 className="text-2xl font-bold text-black mb-2">
@@ -517,10 +529,12 @@ export default function DashboardPage() {
                         <div key={artist.id} className="flex items-center gap-6 group">
                           <div className="text-4xl font-bold text-muted-foreground w-8">{i + 1}</div>
                           <div className="relative h-24 w-24">
-                            <img
+                            <Image
                               src={artist.images[1]?.url || artist.images[0]?.url}
                               alt={artist.name}
+                              fill
                               className="object-cover rounded-sm h-24 w-24"
+                              sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                             />
                           </div>
                           <div>

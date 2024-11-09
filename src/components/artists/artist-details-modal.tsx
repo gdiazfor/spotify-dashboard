@@ -97,7 +97,7 @@ export function ArtistDetailsModal({ artist, isOpen, onClose }: ArtistDetailsMod
               <Card>
                 <CardHeader>
                   <CardTitle>Genres</CardTitle>
-                  <CardDescription>Artist's musical styles</CardDescription>
+                  <CardDescription>Artist&apos;s musical styles</CardDescription>
                 </CardHeader>
                 <CardContent>
                   <div className="flex flex-wrap gap-2">
