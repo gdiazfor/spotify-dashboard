@@ -22,7 +22,7 @@ export function useSpotify() {
           })
         } catch (error) {
           clearSpotifyAuth()
-          throw new Error('Failed to refresh token')
+          throw new Error(`Failed to refresh token: ${error}`)
         }
       }
 
@@ -45,5 +45,8 @@ export function useSpotify() {
     }
   }, [spotify.accessToken, spotify.refreshToken, spotify.expiresAt, setSpotifyAuth, clearSpotifyAuth])
 
-  return { fetchWithToken }
+  return {
+    fetchWithToken,
+    isAuthenticated: !!spotify.accessToken
+  }
 } 

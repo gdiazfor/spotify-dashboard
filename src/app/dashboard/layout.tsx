@@ -1,12 +1,8 @@
 "use client"
 
-import { MainNav } from "@/components/layout/main-nav"
-import { UserNav } from "@/components/layout/user-nav"
-import { ProtectedRoute } from "@/components/auth/protected-route"
 import { memo } from "react"
-import { useSpotify } from "@/hooks/use-spotify";
-import Image from "next/image";
 import { useNowPlaying } from "@/hooks/use-now-playing";
+import { ProtectedRoute } from "@/components/auth/protected-route";
 
 const DashboardContent = memo(function DashboardContent({
   children,

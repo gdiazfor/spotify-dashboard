@@ -6,14 +6,11 @@ import { useSpotify } from "@/hooks/use-spotify"
 import { useEffect, useState, useTransition } from "react"
 import { Skeleton } from "@/components/ui/skeleton"
 import { TimeRangeSelector } from "@/components/shared/time-range-selector"
-import { ListeningTimeChart } from "@/components/charts/listening-time-chart"
-import { GenresChart } from "@/components/charts/genres-chart"
-import { ListMusic, WandIcon, RadioIcon, BrainCircuitIcon, UsersIcon, ListMusicIcon, HistoryIcon } from "lucide-react"
+import { WandIcon, RadioIcon, BrainCircuitIcon, UsersIcon, ListMusicIcon, HistoryIcon } from "lucide-react"
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { PlayButton } from "@/components/shared/play-button"
 import { NowPlaying } from "@/components/now-playing"
-import { ArtistBubbles } from "@/components/artist-bubbles"
 import { ArtistsTab } from "@/components/dashboard/artists-tab"
 import { UserNav } from "@/components/layout/user-nav"
 import { Badge } from "@/components/ui/badge"
@@ -28,12 +25,17 @@ interface TopTrack {
   }
   popularity: number
   preview_url: string | null
+  id: string
 }
 
 interface TopArtist {
+  id: string
   name: string
   images: { url: string }[]
   popularity: number
+  genres: string[]
+  followers: { total: number }
+  affinity?: number  // Optional since it might be calculated separately
 }
 
 interface ListeningStats {
@@ -228,25 +230,6 @@ function TopArtistsContent({ artists }: { artists: TopArtist[] }) {
   )
 }
 
-function ListeningStatsContent({ stats }: { stats: ListeningStats }) {
-  return (
-    <div className="grid grid-cols-3 gap-4">
-      <div className="space-y-1">
-        <p className="text-2xl font-bold">{stats.uniqueTracks}</p>
-        <p className="text-sm text-muted-foreground">Unique Tracks</p>
-      </div>
-      <div className="space-y-1">
-        <p className="text-2xl font-bold">{stats.totalTracks}</p>
-        <p className="text-sm text-muted-foreground">Total Tracks</p>
-      </div>
-      <div className="space-y-1">
-        <p className="text-2xl font-bold">{stats.avgPopularity}%</p>
-        <p className="text-sm text-muted-foreground">Avg. Popularity</p>
-      </div>
-    </div>
-  )
-}
-
 function RecentTracksContent({ tracks }: { tracks: RecentTrack[] }) {
   return (
     <div className="space-y-4">
@@ -278,11 +261,11 @@ function RecentTracksContent({ tracks }: { tracks: RecentTrack[] }) {
 }
 
 export default function DashboardPage() {
-  const [isPending, startTransition] = useTransition()
+  const [, startTransition] = useTransition()
   const [topTracks, setTopTracks] = useState<TopTrack[]>([])
   const [topArtists, setTopArtists] = useState<TopArtist[]>([])
   const [timeRange, setTimeRange] = useState('short_term')
-  const [listeningStats, setListeningStats] = useState<ListeningStats>({
+  const [, setListeningStats] = useState<ListeningStats>({
     uniqueTracks: 0,
     totalTracks: 0,
     avgPopularity: 0,
@@ -294,7 +277,9 @@ export default function DashboardPage() {
 
   useEffect(() => {
     let mounted = true
-    let timeoutId: NodeJS.Timeout
+    const timeoutId = setTimeout(() => {
+      fetchData()
+    }, 300)
 
     const fetchData = async () => {
       setIsLoading(true);
@@ -306,9 +291,9 @@ export default function DashboardPage() {
         ])
 
         if (mounted) {
-          const uniqueTracks = new Set(tracksData.items.map((track: any) => track.id)).size
+          const uniqueTracks = new Set(tracksData.items.map((track: TopTrack) => track.id)).size
           const avgPopularity = Math.round(
-            tracksData.items.reduce((acc: number, track: any) => acc + track.popularity, 0) / 
+            tracksData.items.reduce((acc: number, track: TopTrack) => acc + track.popularity, 0) / 
             tracksData.items.length
           )
 
@@ -316,7 +301,7 @@ export default function DashboardPage() {
             short_term: 'Last 4 Weeks',
             medium_term: 'Last 6 Months',
             long_term: 'All Time'
-          }[timeRange]
+          }[timeRange] || 'Last 4 Weeks'
 
           startTransition(() => {
             setTopTracks(tracksData.items)
@@ -338,10 +323,6 @@ export default function DashboardPage() {
       }
     }
 
-    timeoutId = setTimeout(() => {
-      fetchData()
-    }, 300)
-
     return () => {
       mounted = false
       clearTimeout(timeoutId)
@@ -351,7 +332,9 @@ export default function DashboardPage() {
   return (
     <div>
       <div className="flex items-center justify-between">
-        <h2 className="text-3xl font-bold tracking-tight">Your last month on Spotify</h2>
+        <h2 className="text-3xl font-bold tracking-tight">
+            Your last month on Spotify
+        </h2>
         <div className="flex items-center space-x-2">
           <TimeRangeSelector value={timeRange} onChange={setTimeRange} />
           <UserNav />
