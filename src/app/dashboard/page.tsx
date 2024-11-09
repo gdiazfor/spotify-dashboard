@@ -207,13 +207,13 @@ function TopArtistsContent({ artists }: { artists: TopArtist[] }) {
     <div className="space-y-4">
       {artists.map((artist, i) => (
         <div key={i} className="flex items-center space-x-4 group">
-          <div className="flex-shrink-0 h-12 w-12">
+          <div className="flex-shrink-0 h-12 w-12 relative">
             <Image
               src={artist.images[1]?.url || artist.images[0]?.url}
               alt={artist.name}
-              fill
+              width={48}
+              height={48}
               className="object-cover rounded-sm"
-              sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
             />
           </div>
           <div className="min-w-0 flex-1">

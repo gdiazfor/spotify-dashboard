@@ -86,12 +86,12 @@ export function NowPlaying() {
     const getDevices = async () => {
       try {
         const response = await fetchWithToken('/me/player/devices')
-        if (!response.ok) {
-          console.error('Failed to fetch devices:', response.statusText)
-          return
+        if (!response?.devices) {
+          console.error('Failed to fetch devices:', response)
+          return null
         }
-        const data = await response.json()
-        const activeDevice = data.devices.find((d: SpotifyDevice) => d.is_active)
+        const devices = response.devices
+        const activeDevice = devices.find((d: SpotifyDevice) => d.is_active)
         if (activeDevice) {
           setDeviceId(activeDevice.id)
         }
