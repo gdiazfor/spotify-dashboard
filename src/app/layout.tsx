@@ -7,7 +7,7 @@ import { Providers } from './providers'
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "TopTrackz",
+  title: "Your Spotify Data",
   description: "Your personal music statistics dashboard",
 };
 
