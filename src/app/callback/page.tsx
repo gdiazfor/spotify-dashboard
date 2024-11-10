@@ -1,11 +1,12 @@
 'use client'
 
+import { Suspense } from 'react'
 import { useEffect } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import { useAuthStore } from '@/store/auth-store'
 import { exchangeCodeForTokens } from '@/lib/spotify-service'
 
-export default function CallbackPage() {
+function CallbackContent() {
   const router = useRouter()
   const searchParams = useSearchParams()
   const setSpotifyAuth = useAuthStore((state) => state.setSpotifyAuth)
@@ -30,7 +31,6 @@ export default function CallbackPage() {
         
         setSpotifyAuth(authData)
 
-        // Add a small delay before redirecting
         setTimeout(() => {
           localStorage.removeItem('code_verifier')
           router.replace('/dashboard')
@@ -45,13 +45,25 @@ export default function CallbackPage() {
   }, [searchParams, router, setSpotifyAuth])
 
   return (
+    <div className="text-center">
+      <h2 className="text-2xl font-semibold">Connecting to Spotify...</h2>
+      <p className="text-muted-foreground mt-2">
+        Please wait while we complete the authentication
+      </p>
+    </div>
+  )
+}
+
+export default function CallbackPage() {
+  return (
     <div className="flex min-h-screen items-center justify-center">
-      <div className="text-center">
-        <h2 className="text-2xl font-semibold">Connecting to Spotify...</h2>
-        <p className="text-muted-foreground mt-2">
-          Please wait while we complete the authentication
-        </p>
-      </div>
+      <Suspense fallback={
+        <div className="text-center">
+          <h2 className="text-2xl font-semibold">Loading...</h2>
+        </div>
+      }>
+        <CallbackContent />
+      </Suspense>
     </div>
   )
 } 
