@@ -37,8 +37,13 @@ export function useSpotify() {
       if (!response.ok) {
         if (response.status === 401) {
           clearSpotifyAuth()
+          throw new Error('Unauthorized: Please log in again')
         }
-        throw new Error('API request failed')
+        const errorData = await response.json().catch(() => ({}))
+        throw new Error(
+          `API request failed: ${response.status} ${response.statusText}` +
+          (errorData.error?.message ? ` - ${errorData.error.message}` : '')
+        )
       }
 
       return response.json()

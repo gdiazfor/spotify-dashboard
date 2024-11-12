@@ -42,11 +42,10 @@ export function UserNav() {
   }, [fetchWithToken])
 
   const handleLogout = () => {
-    // Clear any stored tokens/state
-    window.localStorage.removeItem('spotify_token')
-    window.localStorage.removeItem('spotify_refresh_token')
-    // Redirect to home or login page
-    router.push('/')
+    // Clear storage
+    window.localStorage.clear() // Clear all storage
+    // Force reload and redirect
+    window.location.href = '/' // Use window.location instead of router
   }
 
   return (

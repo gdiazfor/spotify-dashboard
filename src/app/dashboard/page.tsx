@@ -16,6 +16,7 @@ import { UserNav } from "@/components/layout/user-nav"
 import { Badge } from "@/components/ui/badge"
 import { MiniNowPlaying } from "@/components/mini-now-playing"
 import Image from 'next/image'
+import { MostListenedAlbum } from "@/components/dashboard/most-listened-album"
 
 interface TopTrack {
   name: string
@@ -238,6 +239,10 @@ function TopArtistsContent({ artists }: { artists: TopArtist[] }) {
 function RecentTracksContent({ tracks }: { tracks: RecentTrack[] }) {
   return (
     <div className="space-y-4">
+      <div className="mb-8">
+        <MiniNowPlaying />
+      </div>
+     
       {tracks.map((item, i) => (
         <div key={i} className="flex items-center space-x-4 group">
           <div className="flex-shrink-0 h-12 w-12 relative">
@@ -266,6 +271,12 @@ function RecentTracksContent({ tracks }: { tracks: RecentTrack[] }) {
     </div>
   )
 }
+
+const timeRangeText = {
+  short_term: 'in the last 4 weeks',
+  medium_term: 'in the last 6 months',
+  long_term: 'of all time'
+} as const;
 
 export default function DashboardPage() {
   const [, startTransition] = useTransition()
@@ -305,10 +316,10 @@ export default function DashboardPage() {
           )
 
           const timeRangeText = {
-            short_term: 'Last 4 Weeks',
-            medium_term: 'Last 6 Months',
-            long_term: 'All Time'
-          }[timeRange] || 'Last 4 Weeks'
+            short_term: 'in the last 4 weeks',
+            medium_term: 'in the last 6 months',
+            long_term: 'of all time'
+          }
 
           startTransition(() => {
             setTopTracks(tracksData.items)
@@ -318,7 +329,7 @@ export default function DashboardPage() {
               uniqueTracks,
               totalTracks: tracksData.items.length,
               avgPopularity,
-              timeRange: timeRangeText
+              timeRange: timeRangeText[timeRange as keyof typeof timeRangeText]
             })
             setRecentTracks(recentlyPlayed.items)
             setIsLoading(false)
@@ -348,12 +359,12 @@ export default function DashboardPage() {
         </div>
       </div>
 
-      <Tabs defaultValue="yourmonth" className="space-y-4 mt-6">
+      <Tabs defaultValue="overview" className="space-y-4 mt-6">
         <TabsList>
 
+          <TabsTrigger value="overview">Overview</TabsTrigger>
           <TabsTrigger value="yourmonth">Your month</TabsTrigger>
 
-          <TabsTrigger value="overview">Overview</TabsTrigger>
           {/* <TabsTrigger value="analytics">Analytics</TabsTrigger> */}
           <TabsTrigger value="artists">Artists</TabsTrigger>
           <TabsTrigger value="tools">Tools</TabsTrigger>
@@ -361,159 +372,23 @@ export default function DashboardPage() {
 
 
 
-        <TabsContent value="yourmonth" className="space-y-4">
-
-
-            <div className="flex gap-4 w-full">
-                
-                <Card className="w-1/3 bg-[#d4b63d] h-[700px]">
-                    <CardHeader>
-                    <CardTitle className="text-black">Your Top 5 Artists</CardTitle>
-                    <CardDescription className="text-black">Most played artists in this time range</CardDescription>
-                    </CardHeader>
-                <CardContent>
-                  <div className="space-y-6">
-                    {isLoading ? (
-                      // Skeleton loading state
-                      Array.from({ length: 5 }).map((_, i) => (
-                        <div key={i} className="flex items-center gap-6">
-                          <div className="text-4xl font-bold text-muted-foreground w-8 ml-3">{i + 1}</div>
-                          <Skeleton className="h-24 w-24 rounded-sm" />
-                          <div className="space-y-2">
-                            <Skeleton className="h-5 w-[250px]" />
-                            <Skeleton className="h-4 w-[200px]" />
-                          </div>
-                        </div>
-                      ))
-                    ) : (
-                      // Actual content
-                      topArtists.slice(0, 5).map((artist, i) => (
-                        <div key={artist.id} className="flex items-center gap-6 group">
-                          <div className="text-4xl font-bold w-8 text-black ml-3">{i + 1}</div>
-                          <div className="relative aspect-square w-24 flex-shrink-0">
-                            <Image
-                              src={artist.images[1]?.url || artist.images[0]?.url}
-                              alt={artist.name}
-                              fill
-                              className="object-cover rounded-sm"
-                              sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                            />
-                          </div>
-                          <div className="min-w-0 flex-1">
-                            <p className="text-black text-xl font-bold leading-none group-hover:text-primary transition-colors mb-2 truncate">
-                              {artist.name}
-                            </p>
-                            <p className="text-black text-base truncate">
-                              {artist.genres[0] || 'No genre available'}
-                            </p>
-                          </div>
-                        </div>
-                      ))
-                    )}
-                  </div>
-                </CardContent>
-                </Card>
-
-                <Card className="w-1/3 bg-[#1DB954] h-[700px]">
-                    <CardHeader>
-                        <CardTitle className="text-black">Most Listened Artist</CardTitle>
-                        <CardDescription className="text-black">Your #1 artist this month</CardDescription>
-                    </CardHeader>
-                    <CardContent className="flex flex-col items-center text-center px-6">
-                        {isLoading ? (
-                            <div className="space-y-4">
-                                <Skeleton className="h-48 w-48 rounded-full" />
-                                <Skeleton className="h-6 w-32 mx-auto" />
-                            </div>
-                        ) : (
-                            topArtists[0] && (
-                                <>
-                                    <div className="relative aspect-square w-full max-w-[288px] mb-4">
-                                        <Image
-                                            src={topArtists[0].images[0]?.url}
-                                            alt={topArtists[0].name}
-                                            fill
-                                            className="object-cover rounded-lg"
-                                            sizes="(max-width: 768px) 100vw, 288px"
-                                            priority
-                                        />
-                                    </div>
-                                    <h3 className="text-2xl font-bold text-black mb-2">
-                                        {topArtists[0].name}
-                                    </h3>
-                                    <div className="space-y-2 text-black">
-                                        <p className="text-sm">
-                                            Top Genre: <span className="font-medium">{topArtists[0].genres[0]}</span>
-                                        </p>
-                                        <p className="text-sm">
-                                            {topArtists[0].affinity} tracks in your top 50
-                                        </p>
-                                        <div className="flex gap-2 justify-center mt-2">
-                                            <Badge variant="outline" className="bg-black/10">
-                                                {formatNumber(topArtists[0].followers.total)} followers
-                                            </Badge>
-                                            <Badge variant="outline" className="bg-black/10">
-                                                {topArtists[0].popularity}% popularity
-                                            </Badge>
-                                        </div>
-                                    </div>
-                                </>
-                            )
-                        )}
-                    </CardContent>
-                </Card>
-
-                {/* Mini Now Playing */}
-
-
-                <div className="flex flex-col w-1/3 h-fit gap-4">
-                    <MiniNowPlaying />      
-                    <Card className="w-full h-fit flex flex-col">
-                        <CardHeader>
-                        <CardTitle>Recently Played</CardTitle>
-                        <CardDescription>Your listening history</CardDescription>
-                        </CardHeader>
-                        
-                        <CardContent className="flex-1 overflow-y-auto pt-4">
-                        {isLoading ? (
-                            <TracksSkeleton />
-                        ) : (
-                            <RecentTracksContent tracks={recentTracks} />
-                        )}
-                        </CardContent>
-                        <div className="p-6 pt-0">
-                        <Button 
-                            variant="outline" 
-                            className="w-full flex items-center gap-2 hover:bg-accent"
-                            disabled
-                        >
-                            <HistoryIcon className="h-4 w-4" />
-                            View Full History
-                        </Button>
-                        </div>
-                    </Card>
-                </div>
-                
-            </div>
-
-        </TabsContent>
-
         <TabsContent value="overview" className="space-y-4">
 
           {/* Top tracks, artists, and recent tracks */}
-          <div className="grid grid-cols-2 lg:grid-cols-6 gap-4 auto-rows-[600px]">
+          <div className="grid grid-cols-2 lg:grid-cols-6 gap-4">
+            
             {/* 1. Top 5 Artists - Takes up 2 columns */}
             <div className="lg:col-span-2">
-              <Card className="h-fit">
+              <Card>
                 <CardHeader>
-                  <CardTitle>Your Top 5 Artists</CardTitle>
+                  <CardTitle className="text-3xl">Your Top Artists</CardTitle>
                   <CardDescription>Most played artists in this time range</CardDescription>
                 </CardHeader>
                 <CardContent>
                   <div className="space-y-6">
                     {isLoading ? (
                       // Skeleton loading state
-                      Array.from({ length: 5 }).map((_, i) => (
+                      Array.from({ length: 10 }).map((_, i) => (
                         <div key={i} className="flex items-center gap-6">
                           <div className="text-4xl font-bold text-muted-foreground w-8">{i + 1}</div>
                           <Skeleton className="h-24 w-24 rounded-sm" />
@@ -524,8 +399,8 @@ export default function DashboardPage() {
                         </div>
                       ))
                     ) : (
-                      // Actual content
-                      topArtists.slice(0, 5).map((artist, i) => (
+                      // Content
+                      topArtists.slice(0, 10).map((artist, i) => (
                         <div key={artist.id} className="flex items-center gap-6 group">
                           <div className="text-4xl font-bold text-muted-foreground w-8">{i + 1}</div>
                           <div className="relative h-24 w-24">
@@ -553,7 +428,7 @@ export default function DashboardPage() {
               </Card>
             </div>
 
-            {/* 2. Top Tracks */}
+            {/* 2. Top Tracks
             <div className="lg:col-span-2">
               <Card className="h-full flex flex-col">
                 <CardHeader>
@@ -579,22 +454,13 @@ export default function DashboardPage() {
                   </Link>
                 </div>
               </Card>
-            </div>
-
-
-            {/* 4. Now Playing */}
-            <div className="lg:col-span-2 row-span-2">
-              <Card className="h-full flex flex-col">
-                <NowPlaying />
-              </Card>
-            </div>
-
+            </div> */}
 
             {/* 3. Recently Played */}
-            <div className="lg:col-span-2 mt-24">
+            <div className="lg:col-span-2">
               <Card className="h-full flex flex-col">
-                <CardHeader>
-                  <CardTitle>Recently Played</CardTitle>
+                <CardHeader className="pb-0">
+                  <CardTitle className="text-3xl">Recently Played</CardTitle>
                   <CardDescription>Your listening history</CardDescription>
                 </CardHeader>
                 
@@ -618,8 +484,25 @@ export default function DashboardPage() {
               </Card>
             </div>
 
+            {/* 4. Now Playing */}
+            <div className="lg:col-span-2 row-span-2">
+                <Card className="h-full flex flex-col">
+                    <CardHeader>
+                        <CardTitle className="text-3xl">Your Most Listened Album</CardTitle>
+                        <CardDescription>
+                            Your most played album {timeRangeText[timeRange as keyof typeof timeRangeText]}
+                        </CardDescription>
+                    </CardHeader>
+                    <CardContent>
+                        <MostListenedAlbum timeRange={timeRange} />
+                    </CardContent>
+                </Card>
+            </div>
+
+            
+
         
-            {/* 5. Top Artists */}
+            {/* 5. Top Artists 
             <div className="lg:col-span-2">
               <Card className="h-full flex flex-col">
                 <CardHeader>
@@ -645,7 +528,7 @@ export default function DashboardPage() {
                   </Link>
                 </div>
               </Card>
-            </div>
+            </div>*/}
 
 
             
@@ -707,6 +590,148 @@ export default function DashboardPage() {
           </div>
 
         </TabsContent>
+
+        <TabsContent value="yourmonth" className="space-y-4">
+
+
+            <div className="flex gap-4 w-full">
+                
+                {/* Your most played artists */}
+                <Card className="w-1/3 bg-[#d4b63d] h-[700px]">
+                    <CardHeader>
+                    <CardTitle className="text-black">Your Top 5 Artists</CardTitle>
+                    <CardDescription className="text-black">Most played artists in this time range</CardDescription>
+                    </CardHeader>
+                    <CardContent>
+                    <div className="space-y-6">
+                        {isLoading ? (
+                        // Skeleton loading state
+                        Array.from({ length: 5 }).map((_, i) => (
+                            <div key={i} className="flex items-center gap-6">
+                            <div className="text-4xl font-bold text-muted-foreground w-8 ml-3">{i + 1}</div>
+                            <Skeleton className="h-24 w-24 rounded-sm" />
+                            <div className="space-y-2">
+                                <Skeleton className="h-5 w-[250px]" />
+                                <Skeleton className="h-4 w-[200px]" />
+                            </div>
+                            </div>
+                        ))
+                        ) : (
+                        // Actual content
+                        topArtists.slice(0, 5).map((artist, i) => (
+                            <div key={artist.id} className="flex items-center gap-6 group">
+                            <div className="text-4xl font-bold w-8 text-black ml-3">{i + 1}</div>
+                            <div className="relative aspect-square w-24 flex-shrink-0">
+                                <Image
+                                src={artist.images[1]?.url || artist.images[0]?.url}
+                                alt={artist.name}
+                                fill
+                                className="object-cover rounded-sm"
+                                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                                />
+                            </div>
+                            <div className="min-w-0 flex-1">
+                                <p className="text-black text-xl font-bold leading-none group-hover:text-primary transition-colors mb-2 truncate">
+                                {artist.name}
+                                </p>
+                                <p className="text-black text-base truncate">
+                                {artist.genres[0] || 'No genre available'}
+                                </p>
+                            </div>
+                            </div>
+                        ))
+                        )}
+                    </div>
+                    </CardContent>
+                </Card>
+
+                <Card className="w-1/3 bg-[#1DB954] h-[700px]">
+                    <CardHeader>
+                        <CardTitle className="text-black">Most Listened Artist</CardTitle>
+                        <CardDescription className="text-black">Your #1 artist this month</CardDescription>
+                    </CardHeader>
+                    <CardContent className="flex flex-col items-center text-center px-6">
+                        {isLoading ? (
+                            <div className="space-y-4">
+                                <Skeleton className="h-48 w-48 rounded-full" />
+                                <Skeleton className="h-6 w-32 mx-auto" />
+                            </div>
+                        ) : (
+                            topArtists[0] && (
+                                <>
+                                    <div className="relative aspect-square w-full max-w-[288px] mb-4">
+                                        <Image
+                                            src={topArtists[0].images[0]?.url}
+                                            alt={topArtists[0].name}
+                                            fill
+                                            className="object-cover rounded-lg"
+                                            sizes="(max-width: 768px) 100vw, 288px"
+                                            priority
+                                        />
+                                    </div>
+                                    <h3 className="text-2xl font-bold text-black mb-2">
+                                        {topArtists[0].name}
+                                    </h3>
+                                    <div className="space-y-2 text-black">
+                                        <p className="text-sm">
+                                            Top Genre: <span className="font-medium">{topArtists[0].genres[0]}</span>
+                                        </p>
+                                        <p className="text-sm">
+                                            {topArtists[0].affinity} tracks in your top 50
+                                        </p>
+                                        <div className="flex gap-2 justify-center mt-2">
+                                            <Badge variant="outline" className="bg-black/10">
+                                                {formatNumber(topArtists[0].followers.total)} followers
+                                            </Badge>
+                                            <Badge variant="outline" className="bg-black/10">
+                                                {topArtists[0].popularity}% popularity
+                                            </Badge>
+                                        </div>
+                                    </div>
+                                </>
+                            )
+                        )}
+                    </CardContent>
+                </Card>
+
+                {/* Mini Now Playing */}
+
+
+                <div className="flex flex-col w-1/3 h-fit gap-4">
+                
+                    {/* Your listening history */}
+                    <Card className="w-full h-fit flex flex-col">
+                        <CardHeader>
+                        <CardTitle>Recently Played</CardTitle>
+                        <CardDescription>Your listening history</CardDescription>
+                        </CardHeader>
+                        
+                        <CardContent className="flex-1 overflow-y-auto pt-4">
+                        {isLoading ? (
+                            <TracksSkeleton />
+                        ) : (
+                            <RecentTracksContent tracks={recentTracks} />
+                        )}
+                        </CardContent>
+                        <div className="p-6 pt-0">
+                        <Button 
+                            variant="outline" 
+                            className="w-full flex items-center gap-2 hover:bg-accent"
+                            disabled
+                        >
+                            <HistoryIcon className="h-4 w-4" />
+                            View Full History
+                        </Button>
+                        </div>
+                    </Card>
+                </div>
+                
+            </div>
+
+        </TabsContent>
+
+        
+
 
         <TabsContent value="artists" className="space-y-4">
           <ArtistsTab />
