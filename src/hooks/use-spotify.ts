@@ -34,19 +34,15 @@ export function useSpotify() {
         },
       })
 
-      if (!response.ok) {
-        if (response.status === 401) {
-          clearSpotifyAuth()
-          throw new Error('Unauthorized: Please log in again')
-        }
-        const errorData = await response.json().catch(() => ({}))
-        throw new Error(
-          `API request failed: ${response.status} ${response.statusText}` +
-          (errorData.error?.message ? ` - ${errorData.error.message}` : '')
-        )
+      if (response.status === 204) {
+        return response;
       }
 
-      return response.json()
+      if (response.ok) {
+        return response.json();
+      }
+
+      throw new Error(`Spotify API error: ${response.statusText}`);
     }
   }, [spotify.accessToken, spotify.refreshToken, spotify.expiresAt, setSpotifyAuth, clearSpotifyAuth])
 
