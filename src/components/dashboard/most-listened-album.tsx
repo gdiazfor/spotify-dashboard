@@ -86,7 +86,7 @@ export function MostListenedAlbum({ timeRange }: { timeRange: string }) {
   return (
     <div className="space-y-6">
       {/* Top Album */}
-      <div className="flex flex-col -mt-6 -mx-6">
+      <div className="flex flex-col">
         <div className="relative w-full aspect-square">
           <Image
             src={topAlbums[0].images[0]?.url}
@@ -97,7 +97,7 @@ export function MostListenedAlbum({ timeRange }: { timeRange: string }) {
             priority
           />
         </div>
-        <div className="p-6 text-center">
+        <div className="p-6 pt-2 text-center">
           <h3 className="text-xl font-bold mb-2">
             {topAlbums[0].name}
           </h3>

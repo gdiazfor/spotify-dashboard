@@ -1,6 +1,6 @@
 "use client"
 
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs"
 
 interface TimeRangeSelectorProps {
   onChange: (value: string) => void
@@ -16,36 +16,19 @@ const timeRanges = [
 export function TimeRangeSelector({ onChange, value }: TimeRangeSelectorProps) {
   return (
     <div className="flex items-center gap-2">
-      <Select value={value} onValueChange={onChange}>
-        <SelectTrigger className="w-[140px]">
-          <SelectValue placeholder="Select time range" />
-        </SelectTrigger>
-        <SelectContent>
+      <Tabs value={value} onValueChange={onChange} className="w-fit">
+        <TabsList>
           {timeRanges.map((range) => (
-            <SelectItem key={range.value} value={range.value}>
+            <TabsTrigger 
+              key={range.value} 
+              value={range.value}
+              className="min-w-[80px]"
+            >
               {range.label}
-            </SelectItem>
+            </TabsTrigger>
           ))}
-        </SelectContent>
-      </Select>
-      
-      {/* <TooltipProvider>
-        <Tooltip>
-          <TooltipTrigger asChild>
-            <InfoIcon className="h-4 w-4 text-muted-foreground hover:text-primary transition-colors cursor-help" />
-          </TooltipTrigger>
-          <TooltipContent className="max-w-[200px]">
-            <p className="font-medium mb-1">Available Time Ranges:</p>
-            <ul className="text-sm space-y-1">
-              {timeRanges.map((range) => (
-                <li key={range.value}>
-                  <span className="font-medium">{range.label}:</span> {range.description}
-                </li>
-              ))}
-            </ul>
-          </TooltipContent>
-        </Tooltip>
-      </TooltipProvider> */}
+        </TabsList>
+      </Tabs>
     </div>
   )
 } 

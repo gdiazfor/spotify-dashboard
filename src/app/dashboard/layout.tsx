@@ -40,7 +40,7 @@ const DashboardContent = memo(function DashboardContent({
             <div className="flex h-16 items-center justify-between">
             </div>
           </header> */}
-          <div className="flex-1 space-y-8 py-8">
+          <div className="flex-1 space-y-8 py-8 pt-20">
             {children}
           </div>
         </div>

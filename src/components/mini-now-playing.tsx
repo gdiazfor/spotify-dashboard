@@ -41,6 +41,7 @@ export function MiniNowPlaying({ className }: MiniNowPlayingProps) {
   const { fetchWithToken, isAuthenticated, spotify } = useSpotify()
   const [deviceId, setDeviceId] = useState<string | null>(null)
   const { spotify: authSpotify } = useAuthStore()
+  const [isSkipping, setIsSkipping] = useState(false)
 
   useEffect(() => {
     if (!isAuthenticated) return
@@ -86,6 +87,7 @@ export function MiniNowPlaying({ className }: MiniNowPlayingProps) {
 
   const handleSkip = async (direction: 'prev' | 'next') => {
     if (!isAuthenticated || !deviceId) return
+    setIsSkipping(true)
     try {
       const response = await fetch(`https://api.spotify.com/v1/me/player/${direction === 'prev' ? 'previous' : 'next'}`, {
         method: 'POST',
@@ -102,16 +104,65 @@ export function MiniNowPlaying({ className }: MiniNowPlayingProps) {
     }
   }
 
-  if (error || !currentTrack?.item) {
+  useEffect(() => {
+    if (isSkipping && currentTrack?.item) {
+      setIsSkipping(false)
+    }
+  }, [currentTrack?.item?.id])
+
+  if (error || !currentTrack?.item || isSkipping) {
     return (
       <div className={className}>
-        <Card className="flex items-center p-4 h-32 bg-muted/50">
-          <div className="w-24 h-24 relative bg-muted rounded-sm flex items-center justify-center">
-            <Volume2 className="h-8 w-8 text-muted-foreground" />
-          </div>
-          <div className="ml-4">
-            <h3 className="text-lg font-semibold text-muted-foreground">Not Playing</h3>
-            <p className="text-sm text-muted-foreground">Play something on Spotify</p>
+        <Card className="flex p-4 h-32 bg-muted/50">
+          <div className="w-24 h-24 relative bg-muted rounded-sm animate-pulse" />
+          <div className="ml-4 flex flex-col justify-between flex-1">
+            <div className="flex items-start justify-between">
+              <div className="min-w-0 flex-1 mr-4">
+                <div className="h-6 w-32 bg-muted animate-pulse rounded mb-2" />
+                <div className="h-4 w-24 bg-muted animate-pulse rounded" />
+              </div>
+              
+              <div className="flex flex-col items-end gap-1 flex-shrink-0">
+                <div className="flex items-center gap-2">
+                  <button
+                    onClick={() => handleSkip('prev')}
+                    className="text-muted-foreground hover:text-foreground transition-colors"
+                  >
+                    <SkipBack className="h-4 w-4" />
+                  </button>
+                  <button
+                    onClick={handlePlayPause}
+                    className="text-muted-foreground hover:text-foreground transition-colors"
+                  >
+                    <Play className="h-4 w-4" />
+                  </button>
+                  <button
+                    onClick={() => handleSkip('next')}
+                    className="text-muted-foreground hover:text-foreground transition-colors"
+                  >
+                    <SkipForward className="h-4 w-4" />
+                  </button>
+                </div>
+                <div className="h-3 w-8 bg-muted animate-pulse rounded mt-3" />
+              </div>
+            </div>
+            
+            <div className="flex justify-between items-end text-xs">
+              <div className="flex-1 min-w-0 mr-4">
+                <div className="h-3 w-16 bg-muted animate-pulse rounded mb-1" />
+                <div className="h-3 w-24 bg-muted animate-pulse rounded" />
+              </div>
+              <div className="flex gap-4">
+                <div>
+                  <div className="h-3 w-8 bg-muted animate-pulse rounded mb-1" />
+                  <div className="h-3 w-8 bg-muted animate-pulse rounded" />
+                </div>
+                <div>
+                  <div className="h-3 w-16 bg-muted animate-pulse rounded mb-1" />
+                  <div className="h-3 w-8 bg-muted animate-pulse rounded" />
+                </div>
+              </div>
+            </div>
           </div>
         </Card>
       </div>
@@ -184,7 +235,7 @@ export function MiniNowPlaying({ className }: MiniNowPlayingProps) {
                     <SkipForward className="h-4 w-4" />
                   </button>
                 </div>
-                <span className="text-xs text-muted-foreground">
+                <span className="text-xs text-muted-foreground mt-1">
                   {formatTime(currentTrack.item.duration_ms)}
                 </span>
               </div>
