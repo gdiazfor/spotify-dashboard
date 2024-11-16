@@ -386,6 +386,8 @@ export default function DashboardPage() {
 
             <TabsContent value="overview" className="space-y-4">
 
+            {/* Here goes the carousel of top listened tracks */}
+
             {/* Top tracks, artists, and recent tracks */}
             <div className="grid grid-cols-2 lg:grid-cols-6 gap-4">
                 
@@ -456,26 +458,59 @@ export default function DashboardPage() {
                                     ) : (
                                     // Content
                                     topArtists.slice(0, 10).map((artist, i) => (
-                                        <div key={artist.id} className="flex items-center gap-6 group">
-                                        <div className="text-4xl font-bold text-muted-foreground w-8">{i + 1}</div>
-                                        <div className="relative h-24 w-24">
-                                            <Image
-                                            src={artist.images[1]?.url || artist.images[0]?.url}
-                                            alt={artist.name}
-                                            fill
-                                            className="object-cover rounded-sm h-24 w-24"
-                                            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                                            />
-                                        </div>
-                                        <div>
-                                            <p className="text-lg font-medium leading-none group-hover:text-primary transition-colors mb-2">
-                                            {artist.name}
-                                            </p>
-                                            <p className="text-base text-muted-foreground">
-                                            {artist.genres[0] || 'No genre available'}
-                                            </p>
-                                        </div>
-                                        </div>
+                                        i === 0 ? (
+                                            // Top Artist Display
+                                            <div key={artist.id} className="flex flex-col mb-8">
+                                                <div className="relative w-full aspect-square">
+                                                    <Image
+                                                        src={artist.images[0]?.url}
+                                                        alt={artist.name}
+                                                        fill
+                                                        className="object-cover p-6"
+                                                        sizes="(max-width: 768px) 100vw, 288px"
+                                                        priority
+                                                    />
+                                                </div>
+                                                <div className="p-6 pt-2 text-center">
+                                                    <h3 className="text-xl font-bold mb-2">
+                                                        {artist.name}
+                                                    </h3>
+                                                    <p className="text-sm text-muted-foreground mb-4">
+                                                        {artist.genres[0] || 'No genre available'}
+                                                    </p>
+                                                    <div className="flex gap-2 justify-center">
+                                                        <Badge variant="secondary">
+                                                            {formatNumber(artist.followers.total)} followers
+                                                        </Badge>
+                                                        <Badge variant="secondary">
+                                                            {artist.popularity}% popularity
+                                                        </Badge>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        ) : (
+                                            // Rest of the artists list
+                                            <div key={artist.id} className="flex items-center gap-6 group">
+                                                <div className="text-4xl font-bold text-muted-foreground w-8">{i + 1}</div>
+                                                <div className="relative h-24 w-24">
+                                                    <Image
+                                                        src={artist.images[1]?.url || artist.images[0]?.url}
+                                                        alt={artist.name}
+                                                        fill
+                                                        className="object-cover rounded-sm"
+                                                        sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                                                    />
+                                                </div>
+                                                <div>
+                                                    <p className="text-lg font-medium leading-none group-hover:text-primary transition-colors mb-2">
+                                                        {artist.name}
+                                                    </p>
+                                                    <p className="text-base text-muted-foreground">
+                                                        {artist.genres[0] || 'No genre available'}
+                                                    </p>
+                                                </div>
+                                            </div>
+                                        )
                                     ))
                                     )}
                                 </div>
