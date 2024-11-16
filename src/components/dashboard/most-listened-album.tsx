@@ -92,7 +92,7 @@ export function MostListenedAlbum({ timeRange }: { timeRange: string }) {
             src={topAlbums[0].images[0]?.url}
             alt={topAlbums[0].name}
             fill
-            className="object-cover p-6"
+            className="object-cover pb-2"
             sizes="(max-width: 768px) 100vw, 288px"
             priority
           />

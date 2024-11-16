@@ -16,9 +16,9 @@ const DashboardContent = memo(function DashboardContent({
     <div className="flex min-h-screen flex-col">
       {/* Now Playing Artist Banner */}
       {currentArtistImage && (
-        <div className="absolute top-0 left-0 w-full h-[300px] overflow-hidden z-10">
+        <div className="absolute top-0 left-0 w-full h-[500px] overflow-hidden z-10">
           <div 
-            className="absolute inset-0 bg-center -z-10 opacity-50"
+            className="absolute inset-0 bg-top -z-10 opacity-50"
             style={{
               backgroundImage: `url(${currentArtistImage})`,
               transition: 'background-image 0.3s ease-in-out',

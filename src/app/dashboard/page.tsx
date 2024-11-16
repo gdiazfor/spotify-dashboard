@@ -17,6 +17,7 @@ import { Badge } from "@/components/ui/badge"
 import { MiniNowPlaying } from "@/components/mini-now-playing"
 import Image from 'next/image'
 import { MostListenedAlbum } from "@/components/dashboard/most-listened-album"
+import { TrackCarousel } from "@/components/dashboard/track-carousel"
 
 interface TopTrack {
   name: string
@@ -385,11 +386,9 @@ export default function DashboardPage() {
             </div>
 
             <TabsContent value="overview" className="space-y-4">
-
-            {/* Here goes the carousel of top listened tracks */}
-
-            {/* Top tracks, artists, and recent tracks */}
-            <div className="grid grid-cols-2 lg:grid-cols-6 gap-4">
+              <TrackCarousel timeRange={timeRange} />
+              {/* Top tracks, artists, and recent tracks */}
+              <div className="grid grid-cols-2 lg:grid-cols-6 gap-4">
                 
                 {/* 3. Recently Played */}
                 <div className="lg:col-span-2">
@@ -407,14 +406,14 @@ export default function DashboardPage() {
                         )}
                         </CardContent>
                         <div className="p-6 pt-0">
-                        <Button 
+                        {/* <Button 
                             variant="outline" 
                             className="w-full flex items-center gap-2 hover:bg-accent"
                             disabled
                         >
                             <HistoryIcon className="h-4 w-4" />
                             View Full History
-                        </Button>
+                        </Button> */}
                         </div>
                     </Card>
                 </div>
@@ -466,7 +465,7 @@ export default function DashboardPage() {
                                                         src={artist.images[0]?.url}
                                                         alt={artist.name}
                                                         fill
-                                                        className="object-cover p-6"
+                                                        className="object-cover pb-2"
                                                         sizes="(max-width: 768px) 100vw, 288px"
                                                         priority
                                                     />
@@ -543,8 +542,8 @@ export default function DashboardPage() {
                 <div className="lg:col-span-2 row-span-2">
                     <Card className="h-full flex flex-col border-none bg-transparent">
                         <CardHeader>
-                            <CardTitle className="text-3xl text-center">Your Most Listened Albums</CardTitle>
-                            <CardDescription className="text-center">
+                            <CardTitle className="text-3xl">Your Most Listened Albums</CardTitle>
+                            <CardDescription>
                                 Your most played album {timeRangeText[timeRange as keyof typeof timeRangeText]}
                             </CardDescription>
                         </CardHeader>
