@@ -358,8 +358,9 @@ export default function DashboardPage() {
   return (
     <div>
       <div className="flex items-center justify-between">
-        <h2 className="text-3xl font-bold tracking-tight">
+        <h2 className="text-5xl font-bold tracking-tight relative inline-block">
             {timeRangeTextAlt[timeRange as keyof typeof timeRangeTextAlt]} on Spotify
+            <span className="absolute left-0 bottom-1 w-full h-2.5 bg-green-500 -z-10"></span>
         </h2>
         <div className="flex items-center space-x-2">
           <UserNav />
@@ -388,22 +389,50 @@ export default function DashboardPage() {
             {/* Top tracks, artists, and recent tracks */}
             <div className="grid grid-cols-2 lg:grid-cols-6 gap-4">
                 
+                {/* 3. Recently Played */}
+                <div className="lg:col-span-2">
+                    <Card className="h-full flex flex-col border-none bg-transparent">
+                        <CardHeader className="pb-0">
+                        <CardTitle className="text-3xl">Recently Played</CardTitle>
+                        <CardDescription>Your listening history</CardDescription>
+                        </CardHeader>
+                        
+                        <CardContent className="flex-1 overflow-y-auto pt-4">
+                        {isLoading ? (
+                            <TracksSkeleton />
+                        ) : (
+                            <RecentTracksContent tracks={recentTracks} />
+                        )}
+                        </CardContent>
+                        <div className="p-6 pt-0">
+                        <Button 
+                            variant="outline" 
+                            className="w-full flex items-center gap-2 hover:bg-accent"
+                            disabled
+                        >
+                            <HistoryIcon className="h-4 w-4" />
+                            View Full History
+                        </Button>
+                        </div>
+                    </Card>
+                </div>
+
+
                 {/* 1. Top 5 Artists - Takes up 2 columns */}
                 <div className="lg:col-span-2 relative">
 
-                    {/* here */}
-                    <div className="flex justify-end mb-4 absolute right-3 top-3">
+                    {/* <div className="flex justify-end mb-4 absolute right-3 top-3">
                         <Tabs defaultValue="artists" value={selectedTab} onValueChange={setSelectedTab} className="w-[200px]">
                             <TabsList className="grid w-full grid-cols-2">
                                 <TabsTrigger value="artists">Artists</TabsTrigger>
                                 <TabsTrigger value="tracks">Tracks</TabsTrigger>
                             </TabsList>
                         </Tabs>
-                    </div>
+                    </div> */}
 
                     {/* Artsist card */}
                     {selectedTab === 'artists' && (
-                        <Card className="border-none">
+                        <Card className="border-none bg-transparent">
                             <CardHeader>
                                 <CardTitle className="text-3xl">Your Top Artists</CardTitle>
                                 <CardDescription>
@@ -456,7 +485,7 @@ export default function DashboardPage() {
 
                     {/* Tracks card */}
                     {selectedTab === 'tracks' && (
-                        <Card className="h-full flex flex-col">
+                        <Card className="h-full flex flex-col border-none bg-transparent">
                             <CardHeader>
                                 <CardTitle>Top Tracks</CardTitle>
                                 <CardDescription>Your most played tracks</CardDescription>
@@ -473,39 +502,13 @@ export default function DashboardPage() {
 
                 </div>
 
-                {/* 3. Recently Played */}
-                <div className="lg:col-span-2">
-                <Card className="h-full flex flex-col">
-                    <CardHeader className="pb-0">
-                    <CardTitle className="text-3xl">Recently Played</CardTitle>
-                    <CardDescription>Your listening history</CardDescription>
-                    </CardHeader>
-                    
-                    <CardContent className="flex-1 overflow-y-auto pt-4">
-                    {isLoading ? (
-                        <TracksSkeleton />
-                    ) : (
-                        <RecentTracksContent tracks={recentTracks} />
-                    )}
-                    </CardContent>
-                    <div className="p-6 pt-0">
-                    <Button 
-                        variant="outline" 
-                        className="w-full flex items-center gap-2 hover:bg-accent"
-                        disabled
-                    >
-                        <HistoryIcon className="h-4 w-4" />
-                        View Full History
-                    </Button>
-                    </div>
-                </Card>
-                </div>
+                
 
                 {/* 4. Now Playing */}
                 <div className="lg:col-span-2 row-span-2">
-                    <Card className="h-full flex flex-col">
+                    <Card className="h-full flex flex-col border-none bg-transparent">
                         <CardHeader>
-                            <CardTitle className="text-3xl text-center">Your Most Listened Album</CardTitle>
+                            <CardTitle className="text-3xl text-center">Your Most Listened Albums</CardTitle>
                             <CardDescription className="text-center">
                                 Your most played album {timeRangeText[timeRange as keyof typeof timeRangeText]}
                             </CardDescription>

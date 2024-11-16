@@ -49,7 +49,7 @@ export function MostListenedAlbum({ timeRange }: { timeRange: string }) {
         // Convert to array and sort by play count
         const sortedAlbums = Object.values(albumCounts)
           .sort((a, b) => b.playCount - a.playCount)
-          .slice(0, 5)
+          .slice(0, 10)
 
         setTopAlbums(sortedAlbums)
       } catch (error) {
