@@ -360,9 +360,10 @@ export default function DashboardPage() {
   return (
     <div>
       <div className="flex items-center justify-between">
-        <h2 className="text-5xl font-bold tracking-tight relative inline-block">
-            {timeRangeTextAlt[timeRange as keyof typeof timeRangeTextAlt]} on Spotify
-            <span className="absolute left-0 bottom-0 w-full h-2.5 bg-green-500 -z-10"></span>
+        <h2 className="text-5xl font-bold tracking-tight inline">
+            <span className="inline-block pb-2 box-decoration-clone bg-[linear-gradient(transparent_calc(100%_-_10px),#1DB954_0)]">
+                {timeRangeTextAlt[timeRange as keyof typeof timeRangeTextAlt]} on Spotify
+            </span>
         </h2>
         <div className="flex flex-col items-end space-x-2 space-y-3">
           <UserNav/>

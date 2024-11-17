@@ -53,7 +53,7 @@ export function TrackCarousel({ timeRange }: { timeRange: string }) {
   return (
     <div className="w-full overflow-hidden py-2 mb-6">
       <div className="flex items-center justify-between mb-2">
-        <h2 className="text-4xl font-bold">Most listened tracks</h2>
+        <h2 className="text-3xl font-bold">Most listened tracks</h2>
         <Button
           variant="outline"
           className="bg-transparent text-[#1DB954] border-[#1DB954] hover:bg-[#1DB954]"
@@ -71,7 +71,7 @@ export function TrackCarousel({ timeRange }: { timeRange: string }) {
           {tracks.map((track, i) => (
             <div 
               key={i} 
-              className="flex-shrink-0 w-[20vw] min-w-[200px] max-w-[300px] pl-8 pr-1 select-none pt-3"
+              className="flex-shrink-0 w-[20vw] min-w-[100px] max-w-[300px] pl-8 pr-1 select-none pt-3"
             >
               <div className="relative aspect-square w-full mb-2 group">
                 <span className="absolute -left-2 -top-2 w-6 h-6 rounded-full bg-background/80 backdrop-blur-sm border flex items-center justify-center text-sm font-medium text-muted-foreground z-10">
