@@ -49,7 +49,7 @@ export function MostListenedAlbum({ timeRange }: { timeRange: string }) {
         // Convert to array and sort by play count
         const sortedAlbums = Object.values(albumCounts)
           .sort((a, b) => b.playCount - a.playCount)
-          .slice(0, 10)
+          .slice(0, 25)
 
         setTopAlbums(sortedAlbums)
       } catch (error) {
@@ -89,6 +89,7 @@ export function MostListenedAlbum({ timeRange }: { timeRange: string }) {
       <div className="flex flex-col">
         <div className="relative w-full aspect-square">
           <Image
+            draggable={false}
             src={topAlbums[0].images[0]?.url}
             alt={topAlbums[0].name}
             fill
@@ -104,17 +105,6 @@ export function MostListenedAlbum({ timeRange }: { timeRange: string }) {
           <p className="text-sm text-muted-foreground mb-4">
             {topAlbums[0].artists[0].name}
           </p>
-          <div className="flex gap-2 justify-center">
-            <Badge variant="secondary">
-              {new Date(topAlbums[0].release_date).getFullYear()}
-            </Badge>
-            <Badge variant="secondary">
-              {topAlbums[0].total_tracks} tracks
-            </Badge>
-            <Badge variant="secondary">
-              {topAlbums[0].playCount} plays
-            </Badge>
-          </div>
         </div>
       </div>
 
@@ -124,6 +114,7 @@ export function MostListenedAlbum({ timeRange }: { timeRange: string }) {
           <div key={album.id} className="flex items-center space-x-4 group">
             <div className="relative h-16 w-16 flex-shrink-0">
               <Image
+                draggable={false}
                 src={album.images[2]?.url || album.images[0]?.url}
                 alt={album.name}
                 fill

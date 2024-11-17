@@ -18,6 +18,7 @@ import { MiniNowPlaying } from "@/components/mini-now-playing"
 import Image from 'next/image'
 import { MostListenedAlbum } from "@/components/dashboard/most-listened-album"
 import { TrackCarousel } from "@/components/dashboard/track-carousel"
+import { MostListenedArtists } from "@/components/dashboard/most-listened-artists"
 
 interface TopTrack {
   name: string
@@ -361,7 +362,7 @@ export default function DashboardPage() {
       <div className="flex items-center justify-between">
         <h2 className="text-5xl font-bold tracking-tight relative inline-block">
             {timeRangeTextAlt[timeRange as keyof typeof timeRangeTextAlt]} on Spotify
-            <span className="absolute left-0 bottom-1 w-full h-2.5 bg-green-500 -z-10"></span>
+            <span className="absolute left-0 bottom-0 w-full h-2.5 bg-green-500 -z-10"></span>
         </h2>
         <div className="flex items-center space-x-2">
           <UserNav />
@@ -419,121 +420,19 @@ export default function DashboardPage() {
                 </div>
 
 
-                {/* 1. Top 5 Artists - Takes up 2 columns */}
+                {/* Artsist card */}
                 <div className="lg:col-span-2 relative">
-
-                    {/* <div className="flex justify-end mb-4 absolute right-3 top-3">
-                        <Tabs defaultValue="artists" value={selectedTab} onValueChange={setSelectedTab} className="w-[200px]">
-                            <TabsList className="grid w-full grid-cols-2">
-                                <TabsTrigger value="artists">Artists</TabsTrigger>
-                                <TabsTrigger value="tracks">Tracks</TabsTrigger>
-                            </TabsList>
-                        </Tabs>
-                    </div> */}
-
-                    {/* Artsist card */}
-                    {selectedTab === 'artists' && (
-                        <Card className="border-none bg-transparent">
-                            <CardHeader>
-                                <CardTitle className="text-3xl">Your Top Artists</CardTitle>
-                                <CardDescription>
-                                    Most played artists  {timeRangeText[timeRange as keyof typeof timeRangeText]}
-                                </CardDescription>
-                            </CardHeader>
-                            <CardContent>
-                                <div className="space-y-6">
-                                    {isLoading ? (
-                                    // Skeleton loading state
-                                    Array.from({ length: 10 }).map((_, i) => (
-                                        <div key={i} className="flex items-center gap-6">
-                                        <div className="text-4xl font-bold text-muted-foreground w-8">{i + 1}</div>
-                                        <Skeleton className="h-24 w-24 rounded-sm" />
-                                        <div className="space-y-2">
-                                            <Skeleton className="h-5 w-[250px]" />
-                                            <Skeleton className="h-4 w-[200px]" />
-                                        </div>
-                                        </div>
-                                    ))
-                                    ) : (
-                                    // Content
-                                    topArtists.slice(0, 10).map((artist, i) => (
-                                        i === 0 ? (
-                                            // Top Artist Display
-                                            <div key={artist.id} className="flex flex-col mb-8">
-                                                <div className="relative w-full aspect-square">
-                                                    <Image
-                                                        src={artist.images[0]?.url}
-                                                        alt={artist.name}
-                                                        fill
-                                                        className="object-cover pb-2"
-                                                        sizes="(max-width: 768px) 100vw, 288px"
-                                                        priority
-                                                    />
-                                                </div>
-                                                <div className="p-6 pt-2 text-center">
-                                                    <h3 className="text-xl font-bold mb-2">
-                                                        {artist.name}
-                                                    </h3>
-                                                    <p className="text-sm text-muted-foreground mb-4">
-                                                        {artist.genres[0] || 'No genre available'}
-                                                    </p>
-                                                    <div className="flex gap-2 justify-center">
-                                                        <Badge variant="secondary">
-                                                            {formatNumber(artist.followers.total)} followers
-                                                        </Badge>
-                                                        <Badge variant="secondary">
-                                                            {artist.popularity}% popularity
-                                                        </Badge>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        ) : (
-                                            // Rest of the artists list
-                                            <div key={artist.id} className="flex items-center gap-6 group">
-                                                <div className="text-4xl font-bold text-muted-foreground w-8">{i + 1}</div>
-                                                <div className="relative h-24 w-24">
-                                                    <Image
-                                                        src={artist.images[1]?.url || artist.images[0]?.url}
-                                                        alt={artist.name}
-                                                        fill
-                                                        className="object-cover rounded-sm"
-                                                        sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                                                    />
-                                                </div>
-                                                <div>
-                                                    <p className="text-lg font-medium leading-none group-hover:text-primary transition-colors mb-2">
-                                                        {artist.name}
-                                                    </p>
-                                                    <p className="text-base text-muted-foreground">
-                                                        {artist.genres[0] || 'No genre available'}
-                                                    </p>
-                                                </div>
-                                            </div>
-                                        )
-                                    ))
-                                    )}
-                                </div>
-                            </CardContent>
-                        </Card>
-                    )}
-
-                    {/* Tracks card */}
-                    {selectedTab === 'tracks' && (
-                        <Card className="h-full flex flex-col border-none bg-transparent">
-                            <CardHeader>
-                                <CardTitle>Top Tracks</CardTitle>
-                                <CardDescription>Your most played tracks</CardDescription>
-                            </CardHeader>
-                            <CardContent>
-                                {isLoading ? (
-                                    <TracksSkeleton />
-                                ) : (
-                                    <TopTracksContent tracks={topTracks} />
-                                )}
-                            </CardContent>
-                        </Card>
-                    )}
-
+                    <Card className="border-none bg-transparent">
+                        <CardHeader>
+                            <CardTitle className="text-3xl">Your Top Artists</CardTitle>
+                            <CardDescription>
+                                Most played artists  {timeRangeText[timeRange as keyof typeof timeRangeText]}
+                            </CardDescription>
+                        </CardHeader>
+                        <CardContent>
+                            <MostListenedArtists artists={topArtists} isLoading={isLoading} />
+                        </CardContent>
+                    </Card>
                 </div>
 
                 
@@ -542,7 +441,7 @@ export default function DashboardPage() {
                 <div className="lg:col-span-2 row-span-2">
                     <Card className="h-full flex flex-col border-none bg-transparent">
                         <CardHeader>
-                            <CardTitle className="text-3xl">Your Most Listened Albums</CardTitle>
+                            <CardTitle className="text-3xl">Your Top Albums</CardTitle>
                             <CardDescription>
                                 Your most played album {timeRangeText[timeRange as keyof typeof timeRangeText]}
                             </CardDescription>
@@ -555,94 +454,7 @@ export default function DashboardPage() {
 
                 
 
-            
-                {/* 5. Top Artists 
-                <div className="lg:col-span-2">
-                <Card className="h-full flex flex-col">
-                    <CardHeader>
-                    <CardTitle>Top Artists</CardTitle>
-                    <CardDescription>Your most played artists</CardDescription>
-                    </CardHeader>
-                    <CardContent className="flex-1 overflow-y-auto">
-                    {isLoading ? (
-                        <ArtistsSkeleton />
-                    ) : (
-                        <TopArtistsContent artists={topArtists} />
-                    )}
-                    </CardContent>
-                    <div className="p-6 pt-0">
-                    <Link href="/dashboard/tools/artist-discovery">
-                        <Button 
-                        variant="outline" 
-                        className="w-full flex items-center gap-2 hover:bg-accent"
-                        >
-                        <UsersIcon className="h-4 w-4" />
-                        Discover Similar Artists
-                        </Button>
-                    </Link>
-                    </div>
-                </Card>
-                </div>*/}
-
-
-                
-                {/* <div className="lg:col-span-2">
-                <Card className="h-full">
-                    <CardHeader>
-                    <CardTitle>Artist Visualization</CardTitle>
-                    </CardHeader>
-                    <CardContent className="h-[500px]">
-                    <ArtistBubbles artists={topArtists.map((artist, index) => ({
-                    ...artist,
-                    rank: index + 1
-                    }))} />
-                    </CardContent>
-                </Card>
-                </div> */}
-
             </div>
-
-            {/* Main stats */}
-            <div className="grid gap-4 grid-cols-1 md:grid-cols-2 lg:grid-cols-4">
-                {/* <Card>
-                <CardHeader>
-                    <div className="flex items-center justify-between">
-                    <div>
-                        <CardTitle>Listening Stats</CardTitle>
-                        <CardDescription>Your listening activity</CardDescription>
-                    </div>
-                    </div>
-                </CardHeader>
-                <CardContent>
-                    {isPending ? (
-                    <ListeningStatsSkeleton />
-                    ) : (
-                    <ListeningStatsContent stats={listeningStats} />
-                    )}
-                </CardContent>
-                </Card> */}
-
-                {/* <Card className="col-span-1">
-                <CardHeader>
-                    <CardTitle>Genres Distribution</CardTitle>
-                    <CardDescription>Your top music genres</CardDescription>
-                </CardHeader>
-                <CardContent>
-                    <GenresChart />
-                </CardContent>
-                </Card>
-
-                <Card className="col-span-2">
-                <CardHeader>
-                    <CardTitle>Listening Activity</CardTitle>
-                    <CardDescription>Hours listened per day</CardDescription>
-                </CardHeader>
-                <CardContent>
-                    <ListeningTimeChart />
-                </CardContent>
-                </Card> */}
-            </div>
-
 
             </TabsContent>
 

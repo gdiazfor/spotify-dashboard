@@ -191,7 +191,7 @@ export default function CreateTopPlaylistPage() {
 
   return (
     <div className="container mx-auto py-6 space-y-6">
-      <Card className="p-6">
+      <Card className="p-6 border-none bg-transparent">
         <div className="flex gap-6">
           {/* Playlist Cover */}
           <div className="w-[250px] h-[250px] bg-gradient-to-br from-purple-600 to-purple-900 rounded-lg shadow-lg flex items-center justify-center">
