@@ -16,7 +16,7 @@ const DashboardContent = memo(function DashboardContent({
     <div className="flex min-h-screen flex-col">
       {/* Now Playing Artist Banner */}
       {currentArtistImage && (
-        <div className="absolute top-0 left-0 w-full h-[580px] overflow-hidden z-10">
+        <div className="absolute top-0 left-0 w-full h-[600px] overflow-hidden z-10">
           <div 
             className="absolute inset-0 bg-center -z-10 opacity-50"
             style={{
@@ -40,7 +40,7 @@ const DashboardContent = memo(function DashboardContent({
             <div className="flex h-16 items-center justify-between">
             </div>
           </header> */}
-          <div className="flex-1 space-y-8 py-8 pt-20">
+          <div className="flex-1 space-y-8 py-8 pt-[60px]">
             {children}
           </div>
         </div>

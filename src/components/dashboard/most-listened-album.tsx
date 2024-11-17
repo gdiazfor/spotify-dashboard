@@ -112,6 +112,9 @@ export function MostListenedAlbum({ timeRange }: { timeRange: string }) {
       <div className="space-y-4">
         {topAlbums.slice(1).map((album, index) => (
           <div key={album.id} className="flex items-center space-x-4 group">
+            <span className="w-5 text-sm font-medium text-muted-foreground">
+              {index + 2}.
+            </span>
             <div className="relative h-16 w-16 flex-shrink-0">
               <Image
                 draggable={false}

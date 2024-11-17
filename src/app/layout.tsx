@@ -10,7 +10,7 @@ const circular = localFont({
 });
 
 export const metadata: Metadata = {
-  title: "Your Spotify Data",
+  title: "Your Music Stats",
   description: "Your personal music statistics dashboard",
 };
 

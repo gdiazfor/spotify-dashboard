@@ -59,7 +59,7 @@ export function TrackCarousel({ timeRange }: { timeRange: string }) {
 
   // Skeleton loaders for both views
   const LargeSkeleton = () => (
-    <div className="flex-shrink-0 w-[20vw] min-w-[100px] max-w-[300px] pl-8 pr-1 select-none pt-3">
+    <div className="flex-shrink-0 w-[20vw] min-w-[100px] max-w-[200px] pl-8 pr-1 select-none pt-3">
       <div className="relative aspect-square w-full mb-2">
         <Skeleton className="absolute -left-2 -top-2 w-6 h-6 rounded-full" />
         <Skeleton className="w-full h-full rounded-md" />
@@ -70,7 +70,7 @@ export function TrackCarousel({ timeRange }: { timeRange: string }) {
   )
 
   const SmallSkeleton = () => (
-    <div className="flex-shrink-0 w-[300px] pl-8 pr-1 select-none pt-3">
+    <div className="flex-shrink-0 w-[300px] pl-4 pr-1 select-none pt-3">
       <div className="flex items-center gap-4 border border-zinc-100/10 rounded-md p-2">
         <div className="relative h-16 w-16 flex-shrink-0">
           <Skeleton className="absolute -left-2 -top-2 w-5 h-5 rounded-full" />
@@ -129,8 +129,8 @@ export function TrackCarousel({ timeRange }: { timeRange: string }) {
               <div 
                 key={`${track.id}-${i}`}
                 className={viewType === 'large' 
-                  ? "flex-shrink-0 w-[20vw] min-w-[100px] max-w-[300px] pl-8 pr-1 select-none pt-3"
-                  : "flex-shrink-0 w-[300px] pl-8 pr-1 select-none pt-3"
+                  ? "flex-shrink-0 w-[20vw] min-w-[100px] max-w-[200px] pl-8 pr-1 select-none pt-3"
+                  : "flex-shrink-0 w-[300px] pl-4 pr-1 select-none pt-3"
                 }
               >
                 {viewType === 'large' ? (

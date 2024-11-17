@@ -387,7 +387,7 @@ export default function DashboardPage() {
       </div>
 
                 
-        <Tabs defaultValue="overview" className="space-y-4 mt-6">
+        <Tabs defaultValue="overview" className="space-y-4 mt-2">
             <div className="flex justify-between">   
                 {/* <TabsList>
 
