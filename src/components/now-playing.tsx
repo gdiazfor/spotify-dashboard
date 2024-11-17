@@ -96,7 +96,7 @@ export function NowPlaying() {
           setDeviceId(activeDevice.id)
         }
       } catch (error) {
-        console.error('Failed to get devices:', error)
+        console.log('Failed to get devices:', error)
       }
     }
     

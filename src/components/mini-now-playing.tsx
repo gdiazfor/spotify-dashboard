@@ -53,7 +53,7 @@ export function MiniNowPlaying({ className }: MiniNowPlayingProps) {
         const activeDevice = response.devices.find((d: SpotifyDevice) => d.is_active)
         if (activeDevice) setDeviceId(activeDevice.id)
       } catch (error) {
-        console.error('Failed to get devices:', error)
+        console.log('Failed to get devices:', error)
       }
     }
     

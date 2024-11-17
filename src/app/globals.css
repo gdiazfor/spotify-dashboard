@@ -92,7 +92,7 @@ body {
     transform: translateX(0);
   }
   100% {
-    transform: translateX(calc(-244px * 50)); /* Adjust based on your item width and count */
+    transform: translateX(-50%);
   }
 }
 
