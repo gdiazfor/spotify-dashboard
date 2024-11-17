@@ -6,7 +6,7 @@ import { useSpotify } from "@/hooks/use-spotify"
 import { useEffect, useState, useTransition } from "react"
 import { Skeleton } from "@/components/ui/skeleton"
 import { TimeRangeSelector } from "@/components/shared/time-range-selector"
-import { WandIcon, RadioIcon, BrainCircuitIcon, UsersIcon, ListMusicIcon, HistoryIcon, Share2 } from "lucide-react"
+import { WandIcon, RadioIcon, BrainCircuitIcon, UsersIcon, ListMusicIcon, HistoryIcon, Share2, RefreshCw } from "lucide-react"
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { PlayButton } from "@/components/shared/play-button"
@@ -302,6 +302,21 @@ export default function DashboardPage() {
   const [isLoading, setIsLoading] = useState(true);
   const [recentTracks, setRecentTracks] = useState<RecentTrack[]>([])
   const [selectedTab, setSelectedTab] = useState('artists')
+  const [isRefreshing, setIsRefreshing] = useState(false);
+
+  const handleRefreshRecentTracks = async () => {
+    setIsRefreshing(true)
+    try {
+      const recentlyPlayed = await fetchWithToken('/me/player/recently-played?limit=50')
+      startTransition(() => {
+        setRecentTracks(recentlyPlayed.items)
+      })
+    } catch (err) {
+      console.error('Failed to refresh recent tracks:', err)
+    } finally {
+      setIsRefreshing(false)
+    }
+  }
 
   useEffect(() => {
     let mounted = true
@@ -393,9 +408,20 @@ export default function DashboardPage() {
                 {/* Recently Played */}
                 <div className="w-full lg:w-[33%]">
                     <Card className="h-full flex flex-col border-none bg-transparent">
-                        <CardHeader className="pb-0">
-                        <CardTitle className="text-3xl">Recently Played</CardTitle>
-                        <CardDescription>Your listening history</CardDescription>
+                        <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                            <div>
+                                <CardTitle className="text-3xl">Recently Played</CardTitle>
+                                <CardDescription>Your listening history</CardDescription>
+                            </div>
+                            <Button
+                                size="icon"
+                                variant="outline"
+                                className="rounded-full h-10 w-10 bg-background/80 hover:bg-accent transition-colors"
+                                onClick={handleRefreshRecentTracks}
+                                disabled={isRefreshing}
+                            >
+                                <RefreshCw className={`h-5 w-5 ${isRefreshing ? 'animate-spin' : ''}`} />
+                            </Button>
                         </CardHeader>
                         
                         <CardContent className="flex-1 overflow-y-auto pt-4">
@@ -474,154 +500,6 @@ export default function DashboardPage() {
             </div>
 
             </TabsContent>
-
-            <TabsContent value="yourmonth" className="space-y-4">
-
-
-                <div className="flex gap-4 w-full">
-                    
-                    {/* Your most played artists */}
-                    <Card className="w-1/3 bg-[#d4b63d] h-[700px]">
-                        <CardHeader>
-                        <CardTitle className="text-black">Your Top 5 Artists</CardTitle>
-                        <CardDescription className="text-black">Most played artists in this time range</CardDescription>
-                        </CardHeader>
-                        <CardContent>
-                        <div className="space-y-6">
-                            {isLoading ? (
-                            // Skeleton loading state
-                            Array.from({ length: 5 }).map((_, i) => (
-                                <div key={i} className="flex items-center gap-6">
-                                <div className="text-4xl font-bold text-muted-foreground w-8 ml-3">{i + 1}</div>
-                                <Skeleton className="h-24 w-24 rounded-sm" />
-                                <div className="space-y-2">
-                                    <Skeleton className="h-5 w-[250px]" />
-                                    <Skeleton className="h-4 w-[200px]" />
-                                </div>
-                                </div>
-                            ))
-                            ) : (
-                            // Actual content
-                            topArtists.slice(0, 5).map((artist, i) => (
-                                <div key={artist.id} className="flex items-center gap-6 group">
-                                <div className="text-4xl font-bold w-8 text-black ml-3">{i + 1}</div>
-                                <div className="relative aspect-square w-24 flex-shrink-0">
-                                    <Image
-                                    src={artist.images[1]?.url || artist.images[0]?.url}
-                                    alt={artist.name}
-                                    fill
-                                    className="object-cover rounded-sm"
-                                    sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                                    />
-                                </div>
-                                <div className="min-w-0 flex-1">
-                                    <p className="text-black text-xl font-bold leading-none group-hover:text-primary transition-colors mb-2 truncate">
-                                    {artist.name}
-                                    </p>
-                                    <p className="text-black text-base truncate">
-                                    {artist.genres[0] || 'No genre available'}
-                                    </p>
-                                </div>
-                                </div>
-                            ))
-                            )}
-                        </div>
-                        </CardContent>
-                    </Card>
-
-                    {/* <Card className="w-1/3 bg-[#1DB954] h-[700px]">
-                        <CardHeader>
-                            <CardTitle className="text-black">Most Listened Artist</CardTitle>
-                            <CardDescription className="text-black">Your #1 artist this month</CardDescription>
-                        </CardHeader>
-                        <CardContent className="flex flex-col items-center text-center px-6">
-                            {isLoading ? (
-                                <div className="space-y-4">
-                                    <Skeleton className="h-48 w-48 rounded-full" />
-                                    <Skeleton className="h-6 w-32 mx-auto" />
-                                </div>
-                            ) : (
-                                topArtists[0] && (
-                                    <>
-                                        <div className="relative aspect-square w-full max-w-[288px] mb-4">
-                                            <Image
-                                                src={topArtists[0].images[0]?.url}
-                                                alt={topArtists[0].name}
-                                                fill
-                                                className="object-cover rounded-lg"
-                                                sizes="(max-width: 768px) 100vw, 288px"
-                                                priority
-                                            />
-                                        </div>
-                                        <h3 className="text-2xl font-bold text-black mb-2">
-                                            {topArtists[0].name}
-                                        </h3>
-                                        <div className="space-y-2 text-black">
-                                            <p className="text-sm">
-                                                Top Genre: <span className="font-medium">{topArtists[0].genres[0]}</span>
-                                            </p>
-                                            <p className="text-sm">
-                                                {topArtists[0].affinity} tracks in your top 50
-                                            </p>
-                                            <div className="flex gap-2 justify-center mt-2">
-                                                <Badge variant="outline" className="bg-black/10">
-                                                    {formatNumber(topArtists[0].followers.total)} followers
-                                                </Badge>
-                                                <Badge variant="outline" className="bg-black/10">
-                                                    {topArtists[0].popularity}% popularity
-                                                </Badge>
-                                            </div>
-                                        </div>
-                                    </>
-                                )
-                            )}
-                        </CardContent>
-                    </Card> */}
-
-
-                    {/* 4. Now Playing */}
-                    <div className="lg:col-span-2 row-span-2">
-                        <Card className="h-full flex flex-col">
-                            <NowPlaying />
-                        </Card>
-                    </div>
-
-                    <div className="flex flex-col w-1/3 h-fit gap-4">
-                    
-                        {/* Your listening history */}
-                        <Card className="w-full h-fit flex flex-col">
-                            <CardHeader>
-                            <CardTitle>Recently Played</CardTitle>
-                            <CardDescription>Your listening history</CardDescription>
-                            </CardHeader>
-                            
-                            <CardContent className="flex-1 overflow-y-auto pt-4">
-                            {isLoading ? (
-                                <TracksSkeleton />
-                            ) : (
-                                
-                                <RecentTracksContent tracks={recentTracks} />
-                            )}
-                            </CardContent>
-                            <div className="p-6 pt-0">
-                            <Button 
-                                variant="outline" 
-                                className="w-full flex items-center gap-2 hover:bg-accent"
-                                disabled
-                            >
-                                <HistoryIcon className="h-4 w-4" />
-                                View Full History
-                            </Button>
-                            </div>
-                        </Card>
-                    </div>
-                    
-                </div>
-
-            </TabsContent>
-
-            
-
 
             <TabsContent value="artists" className="space-y-4">
             <ArtistsTab />
