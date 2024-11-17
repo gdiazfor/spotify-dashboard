@@ -62,14 +62,17 @@ export function TrackCarousel({ timeRange }: { timeRange: string }) {
           <a href="/dashboard/tools/create-top-playlist">Create playlist</a>
         </Button>
       </div>
-      <p className="text-muted-foreground mb-6">Your top tracks that defined your time</p>
+      {/* <p className="text-sm opacity-50 mb-4">Your top tracks</p> */}
       <div className="overflow-hidden">
         <div
           ref={containerRef}
           className="flex animate-scroll"
         >
           {tracks.map((track, i) => (
-            <div key={i} className="flex-shrink-0 w-48 pl-8 pr-4 select-none pt-4">
+            <div 
+              key={i} 
+              className="flex-shrink-0 w-[20vw] min-w-[200px] max-w-[300px] pl-8 pr-1 select-none pt-3"
+            >
               <div className="relative aspect-square w-full mb-2 group">
                 <span className="absolute -left-2 -top-2 w-6 h-6 rounded-full bg-background/80 backdrop-blur-sm border flex items-center justify-center text-sm font-medium text-muted-foreground z-10">
                   {(i % (tracks.length / 2)) + 1}
@@ -79,7 +82,9 @@ export function TrackCarousel({ timeRange }: { timeRange: string }) {
                   alt={track.name}
                   fill
                   className="object-cover rounded-md"
-                  sizes="256px"
+                  sizes="(max-width: 640px) 40vw, 
+                         (max-width: 1024px) 25vw, 
+                         20vw"
                   draggable={false}
                 />
                 <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity rounded-md flex items-center justify-center">

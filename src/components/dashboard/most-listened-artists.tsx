@@ -62,7 +62,7 @@ export function MostListenedArtists({ artists, isLoading }: MostListenedArtistsP
                     src={artist.images[0]?.url}
                     alt={artist.name}
                     fill
-                    className="object-cover pb-2"
+                    className="object-cover pb-2 rounded-md"
                     sizes="(max-width: 768px) 100vw, 288px"
                     priority
                   />

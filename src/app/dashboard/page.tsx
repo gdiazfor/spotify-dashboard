@@ -6,7 +6,7 @@ import { useSpotify } from "@/hooks/use-spotify"
 import { useEffect, useState, useTransition } from "react"
 import { Skeleton } from "@/components/ui/skeleton"
 import { TimeRangeSelector } from "@/components/shared/time-range-selector"
-import { WandIcon, RadioIcon, BrainCircuitIcon, UsersIcon, ListMusicIcon, HistoryIcon } from "lucide-react"
+import { WandIcon, RadioIcon, BrainCircuitIcon, UsersIcon, ListMusicIcon, HistoryIcon, Share2 } from "lucide-react"
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { PlayButton } from "@/components/shared/play-button"
@@ -364,35 +364,33 @@ export default function DashboardPage() {
             {timeRangeTextAlt[timeRange as keyof typeof timeRangeTextAlt]} on Spotify
             <span className="absolute left-0 bottom-0 w-full h-2.5 bg-green-500 -z-10"></span>
         </h2>
-        <div className="flex items-center space-x-2">
-          <UserNav />
+        <div className="flex flex-col items-end space-x-2 space-y-3">
+          <UserNav/>
+          <TimeRangeSelector value={timeRange} onChange={setTimeRange} />
         </div>
       </div>
 
                 
         <Tabs defaultValue="overview" className="space-y-4 mt-6">
             <div className="flex justify-between">   
-                <TabsList>
+                {/* <TabsList>
 
                     <TabsTrigger value="overview">Overview</TabsTrigger>
                     <TabsTrigger value="yourmonth">Your month</TabsTrigger>
 
-                    {/* <TabsTrigger value="analytics">Analytics</TabsTrigger> */}
+                    <TabsTrigger value="analytics">Analytics</TabsTrigger>
                     <TabsTrigger value="artists">Artists</TabsTrigger>
                     <TabsTrigger value="tools">Tools</TabsTrigger>
-                </TabsList>
-
-                <TimeRangeSelector value={timeRange} onChange={setTimeRange} />
-
+                </TabsList> */}
             </div>
 
             <TabsContent value="overview" className="space-y-4">
               <TrackCarousel timeRange={timeRange} />
               {/* Top tracks, artists, and recent tracks */}
-              <div className="grid grid-cols-2 lg:grid-cols-6 gap-4">
+              <div className="flex flex-col lg:flex-row gap-4">
                 
-                {/* 3. Recently Played */}
-                <div className="lg:col-span-2">
+                {/* Recently Played */}
+                <div className="w-full lg:w-[33%]">
                     <Card className="h-full flex flex-col border-none bg-transparent">
                         <CardHeader className="pb-0">
                         <CardTitle className="text-3xl">Recently Played</CardTitle>
@@ -420,14 +418,23 @@ export default function DashboardPage() {
                 </div>
 
 
-                {/* Artsist card */}
-                <div className="lg:col-span-2 relative">
-                    <Card className="border-none bg-transparent">
-                        <CardHeader>
-                            <CardTitle className="text-3xl">Your Top Artists</CardTitle>
-                            <CardDescription>
-                                Most played artists  {timeRangeText[timeRange as keyof typeof timeRangeText]}
-                            </CardDescription>
+                {/* Top artists */}
+                <div className="w-full lg:w-[33%]">
+                    <Card className="h-full border-none bg-transparent">
+                        <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-8">
+                            <div>
+                                <CardTitle className="text-3xl">Your Top Artists</CardTitle>
+                                <CardDescription>
+                                    Most played artists {timeRangeText[timeRange as keyof typeof timeRangeText]}
+                                </CardDescription>
+                            </div>
+                            <Button
+                                size="icon"
+                                variant="outline"
+                                className="rounded-full h-10 w-10 bg-[#1DB954]/10 border-none hover:bg-[#1DB954]/20"
+                            >
+                                <Share2 className="h-5 w-5 text-[#1DB954]" />
+                            </Button>
                         </CardHeader>
                         <CardContent>
                             <MostListenedArtists artists={topArtists} isLoading={isLoading} />
@@ -437,14 +444,23 @@ export default function DashboardPage() {
 
                 
 
-                {/* 4. Now Playing */}
-                <div className="lg:col-span-2 row-span-2">
+                {/* 4. Top albums */}
+                <div className="w-full lg:w-[33%]">
                     <Card className="h-full flex flex-col border-none bg-transparent">
-                        <CardHeader>
-                            <CardTitle className="text-3xl">Your Top Albums</CardTitle>
-                            <CardDescription>
-                                Your most played album {timeRangeText[timeRange as keyof typeof timeRangeText]}
-                            </CardDescription>
+                        <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-8">
+                            <div>
+                                <CardTitle className="text-3xl">Your Top Albums</CardTitle>
+                                <CardDescription>
+                                    Your most played album {timeRangeText[timeRange as keyof typeof timeRangeText]}
+                                </CardDescription>
+                            </div>
+                            <Button
+                                size="icon"
+                                variant="outline"
+                                className="rounded-full h-10 w-10 bg-[#1DB954]/10 border-none hover:bg-[#1DB954]/20"
+                            >
+                                <Share2 className="h-5 w-5 text-[#1DB954]" />
+                            </Button>
                         </CardHeader>
                         <CardContent>
                             <MostListenedAlbum timeRange={timeRange} />

@@ -57,10 +57,10 @@ const config: Config = {
   			sm: 'calc(var(--radius) - 4px)'
   		},
   		animation: {
-  			scroll: 'scroll 40s linear infinite',
+  			carousel: 'carousel 50s linear infinite',
   		},
   		keyframes: {
-  			scroll: {
+  			carousel: {
   				'0%': { transform: 'translateX(0)' },
   				'100%': { transform: 'translateX(-50%)' },
   			}
