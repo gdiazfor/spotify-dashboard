@@ -134,48 +134,55 @@ export function TrackCarousel({ timeRange }: { timeRange: string }) {
                 }
               >
                 {viewType === 'large' ? (
-                  // Large view (existing design)
-                  <div className="relative aspect-square w-full mb-2 group">
-                    <span className="absolute -left-2 -top-2 w-6 h-6 rounded-full bg-background/80 backdrop-blur-sm border flex items-center justify-center text-sm font-medium text-muted-foreground z-10">
-                      {(i % (tracks.length / 2)) + 1}
-                    </span>
-                    <Image
-                      src={track.album.images[0].url}
-                      alt={track.name}
-                      fill
-                      className="object-cover rounded-md"
-                      sizes="(max-width: 640px) 40vw, 
-                             (max-width: 1024px) 25vw, 
-                             20vw"
-                      draggable={false}
-                    />
-                    <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity rounded-md flex items-center justify-center">
-                      <Button
-                        size="icon"
-                        variant="ghost"
-                        className={`h-12 w-12 rounded-full hover:scale-105 transition-transform ${
-                          !track.preview_url ? 'opacity-50 cursor-not-allowed' : ''
-                        }`}
-                        onClick={() => handlePlay(track)}
-                        disabled={!track.preview_url}
-                        title={track.preview_url ? 'Play preview' : 'No preview available'}
-                      >
-                        {currentlyPlaying === track.id ? (
-                          <Pause className="h-6 w-6 text-white" fill="white" />
-                        ) : (
-                          <Play className="h-6 w-6 text-white" fill="white" />
-                        )}
-                      </Button>
-                      <a
-                        href={track.external_urls.spotify}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="absolute top-2 right-2 text-white/80 hover:text-white transition-colors"
-                      >
-                        <ExternalLink className="h-5 w-5" />
-                      </a>
+                  <>
+                    <div className="relative aspect-square w-full mb-2 group">
+                      <span className="absolute -left-2 -top-2 w-6 h-6 rounded-full bg-background/80 backdrop-blur-sm border flex items-center justify-center text-sm font-medium text-muted-foreground z-10">
+                        {(i % (tracks.length / 2)) + 1}
+                      </span>
+                      <Image
+                        src={track.album.images[0].url}
+                        alt={track.name}
+                        fill
+                        className="object-cover rounded-md"
+                        sizes="(max-width: 640px) 40vw, 
+                               (max-width: 1024px) 25vw, 
+                               20vw"
+                        draggable={false}
+                      />
+                      <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity rounded-md flex items-center justify-center">
+                        <Button
+                          size="icon"
+                          variant="ghost"
+                          className={`h-12 w-12 rounded-full hover:scale-105 transition-transform ${
+                            !track.preview_url ? 'opacity-50 cursor-not-allowed' : ''
+                          }`}
+                          onClick={() => handlePlay(track)}
+                          disabled={!track.preview_url}
+                          title={track.preview_url ? 'Play preview' : 'No preview available'}
+                        >
+                          {currentlyPlaying === track.id ? (
+                            <Pause className="h-6 w-6 text-white" fill="white" />
+                          ) : (
+                            <Play className="h-6 w-6 text-white" fill="white" />
+                          )}
+                        </Button>
+                        <a
+                          href={track.external_urls.spotify}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="absolute top-2 right-2 text-white/80 hover:text-white transition-colors"
+                        >
+                          <ExternalLink className="h-5 w-5" />
+                        </a>
+                      </div>
                     </div>
-                  </div>
+                    <div className="flex-1 min-w-0">
+                      <h3 className="font-medium truncate">{track.name}</h3>
+                      <p className="text-sm text-muted-foreground truncate">
+                        {track.artists[0].name}
+                      </p>
+                    </div>
+                  </>
                 ) : (
                   // Small view (new design)
                   <div className="flex items-center gap-4 group border border-zinc-100/10 rounded-md p-2">
